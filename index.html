@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="books">
+    <h1 class="books__title">There are not books, sir</h1>
+    <div class="books__wrapper">
+        <form id="class" class="books__form">
+
+            <div class="books__inputs">
+                <label class="books__input-container">
+                    <span class="books__input-label">Author</span>
+                    <input class="books__input" name="author" type="text" placeholder="New" required/>
+                </label>
+        
+                <label class="books__input-container">
+                    <span class="books__input-label">Book's title</span>
+                    <input class="books__input" name="bookName" type="text" placeholder="New" required/>
+                </label>
+            </div>
+          
+            <div class="books__form-btn-container">
+                <button type="submit" id="submit-book" class="books__btn books__btn-add">add new book</button>
+                <button type="submit" id="edit-book" class="books__btn books__btn-edit books__btn--disabled-btn" >save book</button>
+            </div>
+            
+        </form>
+        <div class="books__list-container">
+            <ul class="books__list"></ul>
+        </div>
+    </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
