@@ -3,7 +3,9 @@ var ServiceWorkers;
     ServiceWorkers.submitMood = 'create';
     ServiceWorkers.shalowBook = {
         author: '',
-        bookName: '0'
+        bookName: '0',
+        pages: '0',
+        year: '0'
     };
     function setShalowBook(book) {
         ServiceWorkers.shalowBook = book;
@@ -34,6 +36,8 @@ var createBookItem = function (item, index) {
     var labelContainer = document.createElement('DIV');
     var author = document.createElement('SPAN');
     var bookName = document.createElement('SPAN');
+    var pages = document.createElement('SPAN');
+    var year = document.createElement('SPAN');
     var btnContainer = document.createElement('DIV');
     var btnDelete = document.createElement('BUTTON');
     var btnEdit = document.createElement('BUTTON');
@@ -41,16 +45,20 @@ var createBookItem = function (item, index) {
     li.className = "books__item-body";
     author.className = "books__item-label";
     bookName.className = "books__item-label";
+    pages.className = "books__item-label";
+    year.className = "books__item-label";
     btnContainer.className = "books__item-btn-container";
     btnDelete.className = "books__btn books__item-btn-delete";
     btnEdit.className = "books__btn books__item-btn-edit";
     author.textContent = item.author;
     bookName.textContent = item.bookName;
+    pages.textContent = item.pages;
+    year.textContent = item.year;
     btnDelete.textContent = 'delete';
     btnEdit.textContent = 'edit';
     btnEdit.addEventListener('click', function () { return editBook(index); });
     btnDelete.addEventListener('click', function () { return deleteBook(index); });
-    labelContainer.append(author, bookName, btnContainer);
+    labelContainer.append(author, bookName, pages, year, btnContainer);
     btnContainer.append(btnEdit, btnDelete);
     li.append(labelContainer, btnContainer);
     return li;
@@ -77,10 +85,14 @@ var editBook = function (index) {
     ServiceWorkers.setMoode('edit');
     var author = document.querySelector('.books__form input[name="author"]');
     var bookName = document.querySelector('.books__form input[name="bookName"]');
+    var pages = document.querySelector('.books__form input[name="pages"]');
+    var year = document.querySelector('.books__form input[name="year"]');
     author.value = EditingBook.author;
     bookName.value = EditingBook.bookName;
-    document.querySelector('.books__btn-add').classList.add("books__btn--disabled");
-    document.querySelector('.books__btn-edit').classList.remove("books__btn--disabled");
+    pages.value = EditingBook.pages;
+    year.value = EditingBook.year;
+    document.querySelector('.books__btn-add').classList.add("books__btn--disabled-btn");
+    document.querySelector('.books__btn-edit').classList.remove("books__btn--disabled-btn");
     addBlur();
 };
 //рендер списка книг
@@ -97,12 +109,15 @@ var getValuesFromForm = function (e) {
     e.preventDefault();
     var answer = {
         author: '',
-        bookName: '0'
+        bookName: '',
+        pages: '',
+        year: ''
     };
     var form = document.querySelector('.books .books__form');
     form.querySelectorAll("input").forEach(function (input) {
         answer[input.name] = input.value || "";
     });
+    console.log(answer);
     form.reset();
     return answer;
 };
@@ -117,8 +132,8 @@ var submitFormCreatingBook = function (e) {
 //обработка формы при редактировании книги
 var submitFormEditingBook = function (e) {
     ServiceWorkers.setMoode('create');
-    document.querySelector('.books__btn-add').classList.remove("books__btn--disabled");
-    document.querySelector('.books__btn-edit').classList.add("books__btn--disabled");
+    document.querySelector('.books__btn-add').classList.remove("books__btn--disabled-btn");
+    document.querySelector('.books__btn-edit').classList.add("books__btn--disabled-btn");
     var answer = getValuesFromForm(e);
     var books = getBooks();
     // @ts-ignore

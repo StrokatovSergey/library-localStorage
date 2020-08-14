@@ -1,6 +1,8 @@
 interface Book {
     author: string,
     bookName: string,
+    pages:string,
+    year:string
 }
 
 
@@ -8,7 +10,9 @@ namespace ServiceWorkers {
    export let submitMood:string = 'create';
    export let shalowBook:Book = {
     author: '',
-    bookName: '0'
+    bookName: '0',
+    pages: '0',
+    year: '0'
    }
    export function setShalowBook(book:Book):void { //установить книгу, которая редактируется
     shalowBook = book
@@ -44,6 +48,9 @@ const createBookItem = (item:Book, index:any):HTMLElement => {
     const labelContainer:HTMLElement = document.createElement('DIV');
     const author:HTMLSpanElement = document.createElement('SPAN');
     const bookName:HTMLSpanElement = document.createElement('SPAN');
+    const pages:HTMLSpanElement = document.createElement('SPAN');
+    const year:HTMLSpanElement = document.createElement('SPAN');
+
 
     const btnContainer:HTMLElement = document.createElement('DIV');
     const btnDelete:HTMLElement = document.createElement('BUTTON');
@@ -53,6 +60,8 @@ const createBookItem = (item:Book, index:any):HTMLElement => {
     li.className = "books__item-body";
     author.className = "books__item-label";
     bookName.className = "books__item-label";
+    pages.className = "books__item-label";
+    year.className = "books__item-label";
 
     btnContainer.className = "books__item-btn-container"
     btnDelete.className = "books__btn books__item-btn-delete";
@@ -60,6 +69,8 @@ const createBookItem = (item:Book, index:any):HTMLElement => {
 
     author.textContent = item.author;
     bookName.textContent = item.bookName;
+    pages.textContent = item.pages;
+    year.textContent = item.year;
 
     btnDelete.textContent = 'delete';
     btnEdit.textContent = 'edit';
@@ -67,7 +78,7 @@ const createBookItem = (item:Book, index:any):HTMLElement => {
     btnEdit.addEventListener('click', () => editBook(index))
     btnDelete.addEventListener('click', () => deleteBook(index))
 
-    labelContainer.append(author, bookName, btnContainer)
+    labelContainer.append(author, bookName, pages, year, btnContainer)
     btnContainer.append(btnEdit, btnDelete)
 
     li.append(labelContainer, btnContainer);
@@ -101,12 +112,16 @@ const editBook = (index:number) => {
 
     let author: HTMLInputElement = document.querySelector('.books__form input[name="author"]');
     let bookName: HTMLInputElement = document.querySelector('.books__form input[name="bookName"]');
+    let pages: HTMLInputElement = document.querySelector('.books__form input[name="pages"]');
+    let year: HTMLInputElement = document.querySelector('.books__form input[name="year"]');
 
     author.value = EditingBook.author;
     bookName.value = EditingBook.bookName;
+    pages.value = EditingBook.pages;
+    year.value = EditingBook.year;
 
-    document.querySelector('.books__btn-add').classList.add("books__btn--disabled");
-    document.querySelector('.books__btn-edit').classList.remove("books__btn--disabled");
+    document.querySelector('.books__btn-add').classList.add("books__btn--disabled-btn");
+    document.querySelector('.books__btn-edit').classList.remove("books__btn--disabled-btn");
 
     addBlur()
 }
@@ -123,15 +138,19 @@ const rendeListBooks = (): void => {
 
 //получение данных с формы при сабмите
 const getValuesFromForm = (e:Event) => {
+    
     e.preventDefault();
     let answer:Book | any  = {
         author: '',
-        bookName: '0'
+        bookName: '',
+        pages: '',
+        year: ''
        };
     const form: HTMLFormElement = document.querySelector('.books .books__form');
     form.querySelectorAll("input").forEach(input => {
         answer[input.name] = input.value || ""
     });
+    console.log(answer);
     form.reset();
     return answer
 }
@@ -152,8 +171,8 @@ const submitFormCreatingBook = (e:Event): void => {
 const submitFormEditingBook = (e:Event): void => {
     ServiceWorkers.setMoode('create');
 
-    document.querySelector('.books__btn-add').classList.remove("books__btn--disabled");
-    document.querySelector('.books__btn-edit').classList.add("books__btn--disabled");
+    document.querySelector('.books__btn-add').classList.remove("books__btn--disabled-btn");
+    document.querySelector('.books__btn-edit').classList.add("books__btn--disabled-btn");
 
     let answer = getValuesFromForm(e)
     let books = getBooks();
